@@ -31,9 +31,10 @@ struct location {
         
         /* Iterate through array of dictionaries; each Movie is a dictionary */
         for result in results {
-            for loc in locations {
+            outerLoop: for loc in locations {
                 if (loc.lastname == result["lastName"] as! String) {
                     duplicate = true
+                    break outerLoop
                 }
             }
             if (!duplicate){
