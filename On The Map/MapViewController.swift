@@ -12,6 +12,8 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    
+    
     var locations : [location] = [location]()
     
     override func viewDidLoad() {
@@ -35,45 +37,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }
         
-        let request = MKLocalSearchRequest()
-        request.naturalLanguageQuery = "Sun Yat-sen University"
-        request.region = mapView.region
-        
-        let search = MKLocalSearch(request: request)
-        
-        search.startWithCompletionHandler({(response: MKLocalSearchResponse!, error: NSError!) in
-        
-            if error != nil {
-                println("Error occured in search: \(error.localizedDescription)")
-            }else if(response.mapItems.count == 0) {
-                println("No matches found")
-            }else {
-                println("Matches Found")
-                let items = response.mapItems as! [MKMapItem]
-                
-                var annotation = MKPointAnnotation()
-                annotation.coordinate = items[0].placemark.coordinate
-                annotation.title = items[0].name
-                
-                let span: MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
-                let location: CLLocationCoordinate2D = annotation.coordinate
-                let region: MKCoordinateRegion = MKCoordinateRegionMake(location, span)
-                
-                self.mapView.setRegion(region, animated: true)
-                
-                self.mapView.addAnnotation(annotation)
-                
-                
-                
-                /*for item in response.mapItems as![MKMapItem] {
-                    println("Name = \(item.name)")
-                }*/
-
-            }
-        
-        })
-        
         // Do any additional setup after loading the view.
+    }
+    @IBAction func AddLocation(sender: UIBarButtonItem) {
+        
     }
 
     override func didReceiveMemoryWarning() {

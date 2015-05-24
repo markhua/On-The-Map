@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Xhq-Dv-nPq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Xhq-Dv-nPq">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -69,7 +69,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VF6-3x-NiF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="214" y="75"/>
+            <point key="canvasLocation" x="-874" y="-53"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="mI1-2u-Wvj">
@@ -88,7 +88,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GcG-8y-ebC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="936" y="107"/>
+            <point key="canvasLocation" x="-152" y="-21"/>
         </scene>
         <!--Table-->
         <scene sceneID="7Mg-yg-9wv">
@@ -105,7 +105,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O1s-Jh-9is" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1690" y="416"/>
+            <point key="canvasLocation" x="602" y="288"/>
         </scene>
         <!--Map-->
         <scene sceneID="yqW-xd-h6E">
@@ -122,7 +122,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zhn-hS-znK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1690" y="-363"/>
+            <point key="canvasLocation" x="602" y="-491"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="Wuo-ON-tQy">
@@ -148,14 +148,117 @@
                             <constraint firstItem="n1f-zV-5S9" firstAttribute="top" secondItem="Ran-no-JEp" secondAttribute="bottom" constant="-8" id="dWb-jV-nHG"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="M9c-VS-5gV"/>
+                    <navigationItem key="navigationItem" id="M9c-VS-5gV">
+                        <barButtonItem key="rightBarButtonItem" image="Pin" id="bvu-pH-c4d">
+                            <connections>
+                                <action selector="AddLocation:" destination="Wew-nj-WA4" id="dMy-PS-2Vu"/>
+                                <segue destination="MdS-JH-ivK" kind="presentation" id="f10-ke-2ys"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="Ran-no-JEp" id="mvM-FZ-hhp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ukm-rS-8B6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2478" y="-363"/>
+            <point key="canvasLocation" x="1390" y="-491"/>
+        </scene>
+        <!--Add Location View Controller-->
+        <scene sceneID="yCy-0b-IIZ">
+            <objects>
+                <viewController storyboardIdentifier="addLocationController" id="MdS-JH-ivK" customClass="AddLocationViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fNH-Mk-fhX"/>
+                        <viewControllerLayoutGuide type="bottom" id="gMn-SQ-B2C"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IUi-mn-4sP">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gf2-oZ-0l4">
+                                <rect key="frame" x="265" y="440" width="70" height="30"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="hhe-nD-0Oo"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <state key="normal" title="Search">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="SearchLocation:" destination="MdS-JH-ivK" eventType="touchUpInside" id="WK6-jv-VI9"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="What are you working on?" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="aLV-Rf-MQf">
+                                <rect key="frame" x="0.0" y="20" width="600" height="200"/>
+                                <color key="backgroundColor" red="0.34668196325270129" green="0.79344385121061534" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="kYR-o5-igB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Shanghai, China" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fQS-wH-lMv">
+                                <rect key="frame" x="0.0" y="220" width="600" height="100"/>
+                                <color key="backgroundColor" red="0.69842855783803148" green="0.9193497474747474" blue="0.8909636861414586" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="2xf-mC-g3O"/>
+                                    <constraint firstAttribute="width" constant="100" id="Hkx-LE-Z3D"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Hkx-LE-Z3D"/>
+                                    </mask>
+                                </variation>
+                            </textView>
+                            <mapView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="TPF-u2-J3i">
+                                <rect key="frame" x="0.0" y="320" width="600" height="280"/>
+                            </mapView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bes-Ii-SUP">
+                                <rect key="frame" x="265" y="550" width="70" height="30"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="VH5-fs-Nri"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <state key="normal" title="Submit">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="submitLocation:" destination="MdS-JH-ivK" eventType="touchUpInside" id="dkx-sf-dZz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="aLV-Rf-MQf" firstAttribute="top" secondItem="fNH-Mk-fhX" secondAttribute="bottom" id="3nx-I7-E9c"/>
+                            <constraint firstItem="fQS-wH-lMv" firstAttribute="leading" secondItem="IUi-mn-4sP" secondAttribute="leadingMargin" constant="-16" id="CeZ-5c-tqy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aLV-Rf-MQf" secondAttribute="trailing" constant="-16" id="JWN-kc-cem"/>
+                            <constraint firstItem="gf2-oZ-0l4" firstAttribute="centerX" secondItem="TPF-u2-J3i" secondAttribute="centerX" id="Pap-57-ONF"/>
+                            <constraint firstItem="bes-Ii-SUP" firstAttribute="centerX" secondItem="TPF-u2-J3i" secondAttribute="centerX" constant="0.5" id="VrA-kp-UUj"/>
+                            <constraint firstItem="gMn-SQ-B2C" firstAttribute="top" secondItem="bes-Ii-SUP" secondAttribute="bottom" constant="20" id="WY9-tK-tJr"/>
+                            <constraint firstItem="fQS-wH-lMv" firstAttribute="top" secondItem="aLV-Rf-MQf" secondAttribute="bottom" id="YqS-m7-nvs"/>
+                            <constraint firstItem="bes-Ii-SUP" firstAttribute="top" secondItem="gf2-oZ-0l4" secondAttribute="bottom" constant="80" id="ZgP-VM-RGo"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fQS-wH-lMv" secondAttribute="trailing" constant="-16" id="leD-kk-5cd"/>
+                            <constraint firstItem="aLV-Rf-MQf" firstAttribute="leading" secondItem="IUi-mn-4sP" secondAttribute="leadingMargin" constant="-16" id="n5q-Ao-ttQ"/>
+                            <constraint firstItem="TPF-u2-J3i" firstAttribute="leading" secondItem="IUi-mn-4sP" secondAttribute="leadingMargin" constant="-16" id="qyS-OE-5nA"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="TPF-u2-J3i" secondAttribute="trailing" constant="-16" id="s9k-HR-KzT"/>
+                            <constraint firstItem="gMn-SQ-B2C" firstAttribute="top" secondItem="TPF-u2-J3i" secondAttribute="bottom" id="tP3-T1-4Rk"/>
+                            <constraint firstItem="TPF-u2-J3i" firstAttribute="top" secondItem="fQS-wH-lMv" secondAttribute="bottom" id="wzY-Yx-RHV"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="locationView" destination="fQS-wH-lMv" id="wcT-h6-Uhb"/>
+                        <outlet property="mapView" destination="TPF-u2-J3i" id="pHV-Bk-8bc"/>
+                        <outlet property="submitButton" destination="bes-Ii-SUP" id="8cZ-yy-iKw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QZL-AC-lV4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2166" y="-491"/>
         </scene>
         <!--Student Location View Controller-->
         <scene sceneID="W0I-wJ-IhB">
@@ -185,7 +288,10 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KJD-aD-vEE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2486" y="416"/>
+            <point key="canvasLocation" x="1398" y="288"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Pin" width="32" height="32"/>
+    </resources>
 </document>
