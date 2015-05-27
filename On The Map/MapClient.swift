@@ -11,6 +11,15 @@ import Foundation
 
 class MapClient: NSObject {
     
+    var userID : String?
+    var sessionID : String?
+    var firstName: String?
+    var lastName: String?
+    
+    override init(){
+        userID = "3929338548"
+    }
+    
     class func sharedInstance() -> MapClient {
         
         struct Singleton {

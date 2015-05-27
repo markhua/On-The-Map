@@ -20,6 +20,7 @@
 		BCD2CD431B0AB649009591F5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCD2CD411B0AB649009591F5 /* LaunchScreen.xib */; };
 		BCD2CD4F1B0AB64A009591F5 /* On_The_MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD2CD4E1B0AB64A009591F5 /* On_The_MapTests.swift */; };
 		BCD2CD591B0AC510009591F5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD2CD581B0AC510009591F5 /* LoginViewController.swift */; };
+		BCEC7C201B13F092009D92BD /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCEC7C1F1B13F092009D92BD /* Roboto-Medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		BCD2CD4D1B0AB64A009591F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BCD2CD4E1B0AB64A009591F5 /* On_The_MapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = On_The_MapTests.swift; sourceTree = "<group>"; };
 		BCD2CD581B0AC510009591F5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		BCEC7C1F1B13F092009D92BD /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		BCD2CD361B0AB649009591F5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BCEC7C1F1B13F092009D92BD /* Roboto-Medium.ttf */,
 				BCD2CD371B0AB649009591F5 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -214,6 +217,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCEC7C201B13F092009D92BD /* Roboto-Medium.ttf in Resources */,
 				BCD2CD3E1B0AB649009591F5 /* Main.storyboard in Resources */,
 				BCD2CD431B0AB649009591F5 /* LaunchScreen.xib in Resources */,
 				BCD2CD401B0AB649009591F5 /* Images.xcassets in Resources */,

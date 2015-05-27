@@ -9,7 +9,7 @@
 import UIKit
 
 
-class StudentLocationViewController: UITableViewController {
+class StudentLocationViewController: UITableViewController, UITableViewDataSource {
     
     @IBOutlet var locationTable: UITableView!
 
@@ -52,16 +52,20 @@ class StudentLocationViewController: UITableViewController {
         return locations.count
     }
     
-   /* override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         /* Push the movie detail view */
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MovieDetailViewController") as! MovieDetailViewController
-        controller.movie = movies[indexPath.row]
-        self.navigationController!.pushViewController(controller, animated: true)
-    }*/
-    
-    // MARK: - Logout
- 
+        let currentlocation = locations[indexPath.row]
+        if let checkURL = NSURL(string: currentlocation.mediaURL) {
+            if (!UIApplication.sharedApplication().openURL(checkURL)){
+                dispatch_async(dispatch_get_main_queue()){
+                    let controller = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
+                    controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                    self.presentViewController(controller, animated: true, completion: nil)
+                }
+            }
+        }
+    }
 
 }
 

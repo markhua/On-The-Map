@@ -13,87 +13,149 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var userNameText: UITextField!
     @IBOutlet weak var passwordText: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var headerTextLabel: UILabel!
+    @IBOutlet weak var progressIcon: UIActivityIndicatorView!
+    @IBOutlet weak var debugText: UILabel!
     
-    var userID : String?
-    var sessionID : String?
+    var tapRecognizer: UITapGestureRecognizer? = nil
+    
+    var keyboardAdjusted = false
+    var lastKeyboardOffset : CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        self.configureUI()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.addKeyboardDismissRecognizer()
+        self.subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.removeKeyboardDismissRecognizer()
+        self.unsubscribeToKeyboardNotifications()
+    }
+    
+    // MARK: - Keyboard Fixes
+    
+    func addKeyboardDismissRecognizer() {
+        self.view.addGestureRecognizer(tapRecognizer!)
+    }
+    
+    func removeKeyboardDismissRecognizer() {
+        self.view.removeGestureRecognizer(tapRecognizer!)
+    }
+    
+    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
     @IBAction func loginButtonAction(sender: UIButton) {
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
         
-        request.HTTPMethod = "POST"
+        self.progressIcon.hidden = false
+        self.debugText.hidden = false
+        self.debugText.text = "Logging in..."
         
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
-        
-        request.HTTPBody = "{\"udacity\": {\"username\": \"\(userNameText.text)\", \"password\": \"\(passwordText.text)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
-        
-        let session = NSURLSession.sharedSession()
-        
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            
-            if error != nil { // Handle error...
-                return
-            }
-            
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-            
-            var parsingError: NSError? = nil
-            let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
-            
-            if let error = parsingError {
-                println(error)
-            
+        MapClient.sharedInstance().LoginUdacity(self.userNameText.text, password: self.passwordText.text){ (success, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), {
+                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
+                    self.presentViewController(controller, animated: true, completion: nil)
+                })
             } else {
-                if let useraccount = parsedResult["account"] as? NSDictionary {
-                    if let userid = useraccount["key"] as? String {
-                        self.userID = userid
-                        println("user id: \(self.userID!)")
-                        
-                        if let session = parsedResult["session"] as? NSDictionary {
-                            if let sessionid = session["id"] as? String{
-                                self.sessionID = sessionid
-                                println("session id: \(self.sessionID!)")
-                                
-                                dispatch_async(dispatch_get_main_queue(), {
-                                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
-                                    self.presentViewController(controller, animated: true, completion: nil)
-                                })
-                            } else {
-                                println("Login failed: sessionID")
-                            }
-                        }
-                    } else {
-                        println("Login failed: userID")
-                    }
+                dispatch_async(dispatch_get_main_queue()){
+                    self.debugText.text = errorString
+                    self.progressIcon.hidden = true
                 }
-
             }
-            //println(NSString(data: newData, encoding: NSUTF8StringEncoding))
         }
-        task.resume()
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+extension LoginViewController {
+    
+    func configureUI() {
+        
+        /* Configure background gradient */
+        self.view.backgroundColor = UIColor(red: 1.000, green: 0.5804, blue: 0.1765, alpha: 1.0)
+        
+        /* Configure header text label */
+        headerTextLabel.font = UIFont(name: "AvenirNext-Medium", size: 24.0)
+        headerTextLabel.textColor = UIColor.whiteColor()
+        
+        /* Configure email textfield */
+        let emailTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0);
+        let emailTextFieldPaddingView = UIView(frame: emailTextFieldPaddingViewFrame)
+        userNameText.leftView = emailTextFieldPaddingView
+        userNameText.leftViewMode = .Always
+        userNameText.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
+        userNameText.textColor = UIColor.whiteColor()
+        userNameText.attributedPlaceholder = NSAttributedString(string: userNameText.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        userNameText.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        
+        /* Configure password textfield */
+        let passwordTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0);
+        let passwordTextFieldPaddingView = UIView(frame: passwordTextFieldPaddingViewFrame)
+        passwordText.leftView = passwordTextFieldPaddingView
+        passwordText.leftViewMode = .Always
+        passwordText.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
+        passwordText.textColor = UIColor.whiteColor()
+        passwordText.attributedPlaceholder = NSAttributedString(string: passwordText.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        passwordText.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        
+        /* Configure debug text label */
+        headerTextLabel.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        headerTextLabel.textColor = UIColor.whiteColor()
+        
+        /* Configure tap recognizer */
+        tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
+        tapRecognizer?.numberOfTapsRequired = 1
+        
+    }
+}
+
+/* This code has been added in response to student comments */
+extension LoginViewController {
+    
+    func subscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func unsubscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        
+        if keyboardAdjusted == false {
+            lastKeyboardOffset = getKeyboardHeight(notification) / 2
+            self.view.superview?.frame.origin.y -= lastKeyboardOffset
+            keyboardAdjusted = true
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        
+        if keyboardAdjusted == true {
+            self.view.superview?.frame.origin.y += lastKeyboardOffset
+            keyboardAdjusted = false
+        }
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.CGRectValue().height
+    }
+}
+

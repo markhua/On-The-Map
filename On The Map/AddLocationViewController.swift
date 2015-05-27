@@ -9,100 +9,133 @@
 import UIKit
 import MapKit
 
-class AddLocationViewController: UIViewController {
+class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocationManagerDelegate {
 
+    @IBOutlet weak var urlView: UITextView!
     @IBOutlet weak var locationView: UITextView!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var searchButton: UIButton!
     @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var progressIcon: UIActivityIndicatorView!
+    @IBOutlet weak var SearchingText: UILabel!
     
-    
+    let locationManager = CLLocationManager()
     var location : CLLocationCoordinate2D?
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        searchButton.layer.cornerRadius = 10
+        searchButton.layer.borderWidth = 1
+        searchButton.layer.borderColor = UIColor.whiteColor().CGColor
+        
+        submitButton.layer.cornerRadius = 10
+        submitButton.layer.borderWidth = 1
+        submitButton.layer.borderColor = UIColor.whiteColor().CGColor
+
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        urlView.delegate = self
+        locationView.delegate = self
+        
+        progressIcon.hidden = true
+        SearchingText.hidden = true
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     @IBAction func SearchLocation(sender: UIButton) {
         
-        let request = MKLocalSearchRequest()
-        request.naturalLanguageQuery = locationView.text
-        request.region = mapView.region
+        progressIcon.hidden = false
+        SearchingText.hidden = false
         
-        let search = MKLocalSearch(request: request)
-        
-        search.startWithCompletionHandler({(response: MKLocalSearchResponse!, error: NSError!) in
-            
-            if error != nil {
-                println("Error occured in search: \(error.localizedDescription)")
-            }else if(response.mapItems.count == 0) {
-                println("No matches found")
-            }else {
-                println("Matches Found")
-                let items = response.mapItems as! [MKMapItem]
-                
+        CLGeocoder().geocodeAddressString(self.locationView.text, completionHandler: {(placemarks, error)->Void in
+            if error == nil {
+                let placemark = placemarks[0] as! CLPlacemark
                 var annotation = MKPointAnnotation()
-                annotation.coordinate = items[0].placemark.coordinate
-                annotation.title = items[0].name
                 
-                let span: MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
-                self.location = annotation.coordinate
+                let span: MKCoordinateSpan = MKCoordinateSpanMake(0.02, 0.02)
+                self.location = placemark.location.coordinate
                 let region: MKCoordinateRegion = MKCoordinateRegionMake(self.location!, span)
+                
+                annotation.coordinate = self.location!
+                annotation.title = placemark.name
+                
+                self.progressIcon.hidden = true
+                self.SearchingText.hidden = true
                 
                 self.mapView.hidden = false
                 self.mapView.setRegion(region, animated: true)
                 self.mapView.addAnnotation(annotation)
                 self.submitButton.hidden = false
+                self.searchButton.hidden = true
+                self.locationView.hidden = true
+                self.urlView.editable = true
+
                 
-                /*for item in response.mapItems as![MKMapItem] {
-                println("Name = \(item.name)")
-                }*/
+            } else {
+                //println(error)
+                self.progressIcon.hidden = true
+                self.SearchingText.hidden = true
+                let controller = UIAlertController(title: "Alert", message: error.localizedDescription, preferredStyle: .Alert)
+                controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(controller, animated: true, completion: nil)
                 
             }
-            
+        
         })
+        
+        
     }
     
     
     @IBAction func submitLocation(sender: UIButton) {
         
-        if let loc = self.location
-        {
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
-            request.HTTPMethod = "POST"
-            request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = "{\"uniqueKey\": \"3929338548\", \"firstName\": \"Huazhi\", \"lastName\": \"Zhang\",\"mapString\": \"\(self.locationView.text)\", \"mediaURL\": \"https://udacity.com\",\"latitude\": \(loc.latitude), \"longitude\": \(loc.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+        self.progressIcon.hidden = false
+        self.SearchingText.text = "Posting location..."
+        self.SearchingText.hidden = false
+        self.mapView.alpha = 0.5
         
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                if error != nil { // Handle error...
-                    return
-                } else {
-                    var parsingError: NSError? = nil
-                    let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
-                
-                    if let error = parsingError {
-                        println(error)
-                    } else {
-                        println(parsedResult)
+        /*
+        MapClient.sharedInstance().getUserInfo { success, error in
+            if success {
+                MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
+                    if success {
+                        println("success")
+                        dispatch_async(dispatch_get_main_queue()){
+                            let controller = UIAlertController(title: "Notification", message: "Post location success", preferredStyle: .Alert)
+                            controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                            self.presentViewController(controller, animated: true, completion: nil)
+                        }
                     }
                 }
-            
             }
-        task.resume()
-            
         }
+*/
+   
 
     }
 
+    @IBAction func dismissViewController(sender: UIBarButtonItem) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        textView.text = ""
+        return true
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String)-> Bool{
+        if text == "\n"
+        {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    
     /*
     // MARK: - Navigation
 

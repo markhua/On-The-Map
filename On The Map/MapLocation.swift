@@ -14,6 +14,7 @@ struct location {
     var mediaURL = ""
     var latitude = 1.0
     var longitude = 1.0
+    var uniqueKey = ""
     
     init(dictionary: [String : AnyObject]) {
         firstname = dictionary["firstName"] as! String
@@ -22,6 +23,7 @@ struct location {
         mediaURL = dictionary["mediaURL"] as! String
         latitude = dictionary["latitude"] as! Double
         longitude = dictionary["longitude"] as! Double
+        uniqueKey = dictionary["uniqueKey"] as! String
     }
     
     static func locationsFromResults(results: [[String : AnyObject]]) -> [location] {
@@ -29,16 +31,23 @@ struct location {
         var locations = [location]()
         var duplicate = false
         
-        /* Iterate through array of dictionaries; each Movie is a dictionary */
+        //Add each location from results to array without duplication
         for result in results {
-            outerLoop: for loc in locations {
-                if (loc.lastname == result["lastName"] as! String) {
-                    duplicate = true
-                    break outerLoop
-                }
-            }
-            if (!duplicate){
-                locations.append(location(dictionary: result))
+            if let uniqueKey = result["uniqueKey"] as? String {
+                    outerLoop: for loc in locations {
+                        
+                        //Use uniqueKey to identify duplicates
+                        if loc.uniqueKey == uniqueKey {
+                            duplicate = true
+                            println("duplicate")
+                            break outerLoop
+                        }
+                    }
+                    if (!duplicate){
+                        locations.append(location(dictionary: result))
+                    }
+            }else{
+                println("uniqueKey is empty")
             }
             duplicate = false
         }

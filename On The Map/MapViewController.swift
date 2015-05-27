@@ -18,7 +18,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        mapView.delegate = self
         MapClient.sharedInstance().getStudentLocations {locs, error in
             if let locs = locs {
                 self.locations = locs
@@ -32,22 +32,40 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     }
                 }
             }else{
-                println(error)
+                let controller = UIAlertController(title: "Alert", message: error, preferredStyle: .Alert)
+                controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(controller, animated: true, completion: nil)
             }
             
         }
         
         // Do any additional setup after loading the view.
     }
-    @IBAction func AddLocation(sender: UIBarButtonItem) {
-        
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func mapView(mapView:MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView {
+        let identifier = "MapLocation"
+        var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier)
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView.canShowCallout = true
+            
+            let btn = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
+            annotationView.rightCalloutAccessoryView = btn
+        }else {
+            annotationView.annotation = annotation
+        }
+        return annotationView
     }
     
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!){
+        var url = view.annotation.subtitle!
+        if let checkURL = NSURL(string: url) {
+            UIApplication.sharedApplication().openURL(checkURL)
+        }else
+        {
+            println("invalid url")
+        }
+    }
 
     /*
     // MARK: - Navigation
