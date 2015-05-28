@@ -217,6 +217,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="M9c-VS-5gV">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="E5o-5y-iNq">
+                            <connections>
+                                <action selector="refreshMap:" destination="Wew-nj-WA4" id="06N-gb-KXd"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="Pin" id="bvu-pH-c4d">
                             <connections>
                                 <segue destination="MdS-JH-ivK" kind="presentation" id="q51-dE-EYU"/>
@@ -403,6 +408,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="OJZ-C9-qkN">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="cjF-j5-F8w">
+                            <connections>
+                                <action selector="refreshTable:" destination="GBI-5d-trI" id="dC1-Q3-90s"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="Pin" id="5xj-kz-2A9">
                             <connections>
                                 <segue destination="MdS-JH-ivK" kind="presentation" id="g04-yL-ILX"/>
@@ -424,6 +434,6 @@
         <image name="Pin" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="g04-yL-ILX"/>
+        <segue reference="q51-dE-EYU"/>
     </inferredMetricsTieBreakers>
 </document>

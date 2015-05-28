@@ -118,6 +118,7 @@ extension MapClient{
             
             if error != nil { // Handle error...
                 println("Failed to get user info")
+                completionHandler(success: false, errorString: "Connection error")
                 return
             }
             
@@ -165,6 +166,7 @@ extension MapClient{
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error...
+                completionHandler(success: false, errorString: "Connection error")
                 return
             } else {
                 var parsingError: NSError? = nil

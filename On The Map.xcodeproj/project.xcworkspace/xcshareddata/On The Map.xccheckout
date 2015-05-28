@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>FB2EFA80-0B01-45A5-8A3B-21D67F5FB07D</string>
 	<key>IDESourceControlProjectName</key>
-	<string>On The Map</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>4E9E8FEAA1CFE08E05161C6781B402594C4628D9</key>
 		<string>https://github.com/markhua/On-The-Map.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>On The Map.xcodeproj</string>
+	<string>On The Map.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4E9E8FEAA1CFE08E05161C6781B402594C4628D9</key>

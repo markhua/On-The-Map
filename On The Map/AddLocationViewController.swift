@@ -79,10 +79,7 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
                 //println(error)
                 self.progressIcon.hidden = true
                 self.SearchingText.hidden = true
-                let controller = UIAlertController(title: "Alert", message: error.localizedDescription, preferredStyle: .Alert)
-                controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(controller, animated: true, completion: nil)
-                
+                self.notificationmsg(error.localizedDescription)
             }
         
         })
@@ -98,26 +95,51 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
         self.SearchingText.hidden = false
         self.mapView.alpha = 0.5
         
-        /*
+        
         MapClient.sharedInstance().getUserInfo { success, error in
             if success {
-                MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
-                    if success {
-                        println("success")
-                        dispatch_async(dispatch_get_main_queue()){
-                            let controller = UIAlertController(title: "Notification", message: "Post location success", preferredStyle: .Alert)
-                            controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                            self.presentViewController(controller, animated: true, completion: nil)
+                if let checkURL = NSURL(string: self.urlView.text) {
+                    if UIApplication.sharedApplication().canOpenURL(checkURL)  {
+                        MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
+                            if success {
+                                println("success")
+                                dispatch_async(dispatch_get_main_queue()){
+                                    self.notificationmsg("Post location success")
+                                }
+                            } else {
+                                self.notificationmsg(error!)
+                            }
                         }
+                    }else{
+                        self.notificationmsg("invalid url")
                     }
+                    
+                }else{
+                    self.notificationmsg("invalid url")
                 }
+            } else {
+                self.notificationmsg(error!)
             }
+            self.SearchingText.text = "Searching..."
         }
-*/
+
    
 
     }
 
+    func notificationmsg (msgstring: String)
+    {
+        self.mapView.alpha = 1
+        self.SearchingText.hidden = true
+        self.progressIcon.hidden = true
+        
+        dispatch_async(dispatch_get_main_queue()){
+            let controller = UIAlertController(title: "Notification", message: msgstring,     preferredStyle: .Alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func dismissViewController(sender: UIBarButtonItem) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }

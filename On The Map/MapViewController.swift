@@ -15,6 +15,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     var locations : [location] = [location]()
+    var annotations : [MKPointAnnotation] = [MKPointAnnotation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     Annotation.coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
                     Annotation.title = "\(location.firstname) \(location.lastname)"
                     Annotation.subtitle = location.mediaURL
+                    self.annotations.append(Annotation)
                     dispatch_async(dispatch_get_main_queue()){
                         self.mapView.addAnnotation(Annotation)
                     }
@@ -40,6 +42,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         
         // Do any additional setup after loading the view.
+    }
+    @IBAction func refreshMap(sender: UIBarButtonItem) {
+        self.mapView.removeAnnotations(self.annotations)
+        self.viewDidLoad()
     }
 
     func mapView(mapView:MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView {

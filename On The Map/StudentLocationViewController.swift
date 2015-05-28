@@ -26,11 +26,19 @@ class StudentLocationViewController: UITableViewController, UITableViewDataSourc
                     self.locationTable.reloadData()
                 }
             }else{
-                println(error)
+                dispatch_async(dispatch_get_main_queue()){
+                    let controller = UIAlertController(title: "Alert", message: error, preferredStyle: .Alert)
+                    controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                    self.presentViewController(controller, animated: true, completion: nil)
+                }
             }
             
         }
 
+    }
+    
+    @IBAction func refreshTable(sender: UIBarButtonItem) {
+        self.viewDidLoad()
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
