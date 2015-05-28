@@ -28,12 +28,12 @@ struct location {
         objectid = dictionary["objectId"] as! String
     }
     
+    //Add each location from results to array without duplication
     static func locationsFromResults(results: [[String : AnyObject]]) -> [location] {
         
         var locations = [location]()
         var duplicate = false
         
-        //Add each location from results to array without duplication
         for result in results {
             if let uniqueKey = result["uniqueKey"] as? String {
                     outerLoop: for loc in locations {

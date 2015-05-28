@@ -11,6 +11,7 @@ import MapKit
 
 extension MapClient{
     
+    //Log in users with username and password from LoginViewController, store userid and sessionid in MapClient
     func LoginUdacity(username : String, password : String, completionHandler: (success: Bool, errorString: String?) -> Void) {
         
         if (username == "") {
@@ -23,7 +24,7 @@ extension MapClient{
             return
         }
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseUdacityURL)session")!)
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -48,7 +49,7 @@ extension MapClient{
             if let error = parsingError {
                     completionHandler(success: false, errorString: "Parsing Error")
             } else {
-                println(parsedResult)
+                //parse userid and sessionid
                 if let useraccount = parsedResult["account"] as? NSDictionary {
                     if let userid = useraccount["key"] as? String {
                         self.userID = userid
@@ -75,31 +76,33 @@ extension MapClient{
 
     }
     
-    func getStudentLocations(completionHandler: (result: [location]?, error: String?)->Void){
+    //get student locations list and store into the [location] array in MapClient
+    func getStudentLocations(completionHandler: (success: Bool, error: String?)->Void){
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation")!)
+        request.addValue(MapClient.Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")
         
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(MapClient.Constants.ApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
 
         let session = NSURLSession.sharedSession()
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error...
-                completionHandler(result: nil, error: "Connection Failed")
+                completionHandler(success: false, error: "Connection Failed")
                 return
             } else {
                 var parsingError: NSError? = nil
                 let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
                 
                 if let error = parsingError {
-                    completionHandler(result: nil, error: "Parsing Error")
+                    completionHandler(success: false, error: "Parsing Error")
                 } else {
                     if let resultArray = parsedResult["results"] as? [[String: AnyObject]]{
                         var locations = location.locationsFromResults(resultArray)
-                        completionHandler(result: locations, error: nil)
+                        self.locations = locations
+                        completionHandler(success: true, error: nil)
                     } else {
-                        completionHandler(result: nil, error: "Could not parse getlocations")
+                        completionHandler(success: false, error: "Could not parse getlocations")
                     }
                     
                 }
@@ -110,9 +113,10 @@ extension MapClient{
         task.resume()
     }
     
+    //get the login user's first name and last name, called in AddLocationViewController
     func getUserInfo (completionHandler: (success: Bool, errorString: String?)->Void) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(self.userID!)")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseUdacityURL)users/\(self.userID!)")!)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
@@ -154,12 +158,13 @@ extension MapClient{
         task.resume()
     }
     
+    //post the login student's location with location and media string from AddLocationViewController
     func postUserLocation (location : CLLocationCoordinate2D, LocationString : String, MediaURL : String, completionHandler: (success: Bool, errorString: String?)->Void){
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation")!)
         request.HTTPMethod = "POST"
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(MapClient.Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(MapClient.Constants.ApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"uniqueKey\": \"\(self.userID!)\", \"firstName\": \"\(self.firstName!)\", \"lastName\": \"\(self.lastName!)\",\"mapString\": \"\(LocationString)\", \"mediaURL\": \"\(MediaURL)\",\"latitude\": \(location.latitude), \"longitude\": \(location.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         
@@ -184,15 +189,18 @@ extension MapClient{
         
     }
     
-    func updateUserLocation (objectid: String, location : CLLocationCoordinate2D, LocationString : String, MediaURL : String, completionHandler: (success: Bool, errorString: String?)->Void){
+    //Update a student's location if the student's pin already exists
+    func updateUserLocation (location : CLLocationCoordinate2D, LocationString : String, MediaURL : String, completionHandler: (success: Bool, errorString: String?)->Void){
         
-        let urlString = "https://api.parse.com/1/classes/StudentLocation/\(objectid)"
+        let urlString = "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation/\(self.objectid!)"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         
+        println(MediaURL)
+        
         request.HTTPMethod = "PUT"
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(MapClient.Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(MapClient.Constants.ApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         request.HTTPBody = "{\"uniqueKey\": \"\(self.userID!)\", \"firstName\": \"\(self.firstName!)\", \"lastName\": \"\(self.lastName!)\",\"mapString\": \"\(LocationString)\", \"mediaURL\": \"\(MediaURL)\",\"latitude\": \(location.latitude), \"longitude\": \(location.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
@@ -214,8 +222,6 @@ extension MapClient{
             }
             
         }
-        
-        
         
         task.resume()
         

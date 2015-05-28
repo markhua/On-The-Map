@@ -15,6 +15,8 @@ class MapClient: NSObject {
     var sessionID : String?
     var firstName: String?
     var lastName: String?
+    var objectid: String?
+    var locations : [location] = [location]()
     
     override init(){
         userID = "3929338548"

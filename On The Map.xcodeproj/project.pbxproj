@@ -21,6 +21,7 @@
 		BCD2CD4F1B0AB64A009591F5 /* On_The_MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD2CD4E1B0AB64A009591F5 /* On_The_MapTests.swift */; };
 		BCD2CD591B0AC510009591F5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD2CD581B0AC510009591F5 /* LoginViewController.swift */; };
 		BCEC7C201B13F092009D92BD /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCEC7C1F1B13F092009D92BD /* Roboto-Medium.ttf */; };
+		BCF54C4F1B1758D500A24C9D /* MapConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF54C4E1B1758D500A24C9D /* MapConstant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		BCD2CD4E1B0AB64A009591F5 /* On_The_MapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = On_The_MapTests.swift; sourceTree = "<group>"; };
 		BCD2CD581B0AC510009591F5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		BCEC7C1F1B13F092009D92BD /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		BCF54C4E1B1758D500A24C9D /* MapConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapConstant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,13 +98,14 @@
 			isa = PBXGroup;
 			children = (
 				BCD2CD381B0AB649009591F5 /* AppDelegate.swift */,
+				BCF54C4E1B1758D500A24C9D /* MapConstant.swift */,
 				BCCDE89B1B0D6AEA0045AD9A /* MapClient.swift */,
 				BCCDE89D1B0D6B8A0045AD9A /* MapConvenience.swift */,
 				BCCDE8991B0D69DD0045AD9A /* MapLocation.swift */,
-				BCD2CD3A1B0AB649009591F5 /* StudentLocationViewController.swift */,
-				BC419C751B101AD60077D2CC /* AddLocationViewController.swift */,
 				BCD2CD581B0AC510009591F5 /* LoginViewController.swift */,
+				BCD2CD3A1B0AB649009591F5 /* StudentLocationViewController.swift */,
 				BCCDE8951B0D64670045AD9A /* MapViewController.swift */,
+				BC419C751B101AD60077D2CC /* AddLocationViewController.swift */,
 				BCD2CD3C1B0AB649009591F5 /* Main.storyboard */,
 				BCD2CD3F1B0AB649009591F5 /* Images.xcassets */,
 				BCD2CD411B0AB649009591F5 /* LaunchScreen.xib */,
@@ -238,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCF54C4F1B1758D500A24C9D /* MapConstant.swift in Sources */,
 				BCD2CD591B0AC510009591F5 /* LoginViewController.swift in Sources */,
 				BCCDE89C1B0D6AEA0045AD9A /* MapClient.swift in Sources */,
 				BCD2CD3B1B0AB649009591F5 /* StudentLocationViewController.swift in Sources */,

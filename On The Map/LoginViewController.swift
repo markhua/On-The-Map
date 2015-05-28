@@ -64,6 +64,8 @@ class LoginViewController: UIViewController {
         self.debugText.text = "Logging in..."
         
         MapClient.sharedInstance().LoginUdacity(self.userNameText.text, password: self.passwordText.text){ (success, errorString) in
+            
+            //Navigate to mapview if login is successful, otherwise display error string
             if success {
                 dispatch_async(dispatch_get_main_queue(), {
                     let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
@@ -123,7 +125,7 @@ extension LoginViewController {
     }
 }
 
-/* This code has been added in response to student comments */
+/* code to adjust view to keyboard */
 extension LoginViewController {
     
     func subscribeToKeyboardNotifications() {

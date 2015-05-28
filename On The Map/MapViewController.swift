@@ -12,18 +12,17 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
-    
-    
-    var locations : [location] = [location]()
+
     var annotations : [MKPointAnnotation] = [MKPointAnnotation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        MapClient.sharedInstance().getStudentLocations {locs, error in
-            if let locs = locs {
-                self.locations = locs
-                for location in self.locations {
+        
+        //Creat an array of annotations from students' locations and add to map
+        MapClient.sharedInstance().getStudentLocations {success, error in
+            if success {
+                for location in MapClient.sharedInstance().locations {
                     var Annotation = MKPointAnnotation()
                     Annotation.coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
                     Annotation.title = "\(location.firstname) \(location.lastname)"
@@ -43,11 +42,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         // Do any additional setup after loading the view.
     }
+    
+    //Refresh location data
     @IBAction func refreshMap(sender: UIBarButtonItem) {
         self.mapView.removeAnnotations(self.annotations)
         self.viewDidLoad()
     }
 
+    //Add information button to each pin
     func mapView(mapView:MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView {
         let identifier = "MapLocation"
         var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier)
@@ -63,6 +65,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         return annotationView
     }
     
+    //Open the URL in browser after tapping the annotation
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!){
         var url = view.annotation.subtitle!
         if let checkURL = NSURL(string: url) {
@@ -72,15 +75,5 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             println("invalid url")
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
