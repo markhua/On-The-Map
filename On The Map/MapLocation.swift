@@ -15,6 +15,7 @@ struct location {
     var latitude = 1.0
     var longitude = 1.0
     var uniqueKey = ""
+    var objectid = ""
     
     init(dictionary: [String : AnyObject]) {
         firstname = dictionary["firstName"] as! String
@@ -24,6 +25,7 @@ struct location {
         latitude = dictionary["latitude"] as! Double
         longitude = dictionary["longitude"] as! Double
         uniqueKey = dictionary["uniqueKey"] as! String
+        objectid = dictionary["objectId"] as! String
     }
     
     static func locationsFromResults(results: [[String : AnyObject]]) -> [location] {

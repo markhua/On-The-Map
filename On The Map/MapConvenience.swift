@@ -183,4 +183,41 @@ extension MapClient{
         task.resume()
         
     }
+    
+    func updateUserLocation (objectid: String, location : CLLocationCoordinate2D, LocationString : String, MediaURL : String, completionHandler: (success: Bool, errorString: String?)->Void){
+        
+        let urlString = "https://api.parse.com/1/classes/StudentLocation/\(objectid)"
+        let url = NSURL(string: urlString)
+        let request = NSMutableURLRequest(URL: url!)
+        
+        request.HTTPMethod = "PUT"
+        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.HTTPBody = "{\"uniqueKey\": \"\(self.userID!)\", \"firstName\": \"\(self.firstName!)\", \"lastName\": \"\(self.lastName!)\",\"mapString\": \"\(LocationString)\", \"mediaURL\": \"\(MediaURL)\",\"latitude\": \(location.latitude), \"longitude\": \(location.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil { // Handle error...
+                completionHandler(success: false, errorString: "Connection error")
+                return
+            } else {
+                var parsingError: NSError? = nil
+                let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+                
+                if let error = parsingError {
+                    completionHandler(success: false, errorString: "Update error")
+                } else {
+                    completionHandler(success: true, errorString: nil)
+                }
+            }
+            
+        }
+        
+        
+        
+        task.resume()
+        
+    }
 }

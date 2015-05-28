@@ -94,21 +94,56 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
         self.SearchingText.text = "Posting location..."
         self.SearchingText.hidden = false
         self.mapView.alpha = 0.5
+        var userpinexist = false
+        var objectID : String?
         
+        MapClient.sharedInstance().getStudentLocations {locs, error in
+            if let locs = locs {
+                outerloop: for location in locs{
+                    if location.uniqueKey == MapClient.sharedInstance().userID {
+                        userpinexist = true
+                        objectID = location.objectid
+                        break outerloop
+                    }
+                }
+            }
+        }
         
         MapClient.sharedInstance().getUserInfo { success, error in
             if success {
                 if let checkURL = NSURL(string: self.urlView.text) {
                     if UIApplication.sharedApplication().canOpenURL(checkURL)  {
-                        MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
-                            if success {
-                                println("success")
-                                dispatch_async(dispatch_get_main_queue()){
-                                    self.notificationmsg("Post location success")
+                        
+                        if(userpinexist){
+                            dispatch_async(dispatch_get_main_queue()){
+                                let controller = UIAlertController(title: "Notification", message: "\(MapClient.sharedInstance().firstName!) \(MapClient.sharedInstance().lastName!), you already have a pin, do you want to update it?", preferredStyle: .Alert)
+                                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+                                let updateAction: UIAlertAction = UIAlertAction(title: "Update", style: .Default) { action -> Void in
+                                    MapClient.sharedInstance().updateUserLocation(objectID!, location: self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
+                                        if success {
+                                            dispatch_async(dispatch_get_main_queue()){
+                                                self.notificationmsg("Update location success")
+                                            }
+                                        } else {
+                                            self.notificationmsg(error!)
+                                        }
+                                    }
                                 }
-                            } else {
-                                self.notificationmsg(error!)
+                                controller.addAction(updateAction)
+                                controller.addAction(cancelAction)
+                                self.presentViewController(controller, animated: true, completion: nil)
                             }
+                        } else {
+                            MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
+                                if success {
+                                    dispatch_async(dispatch_get_main_queue()){
+                                        self.notificationmsg("Post location success")
+                                    }
+                                } else {
+                                    self.notificationmsg(error!)
+                                }
+                            }
+                        
                         }
                     }else{
                         self.notificationmsg("invalid url")
@@ -120,7 +155,12 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
             } else {
                 self.notificationmsg(error!)
             }
-            self.SearchingText.text = "Searching..."
+            dispatch_async(dispatch_get_main_queue()){
+                self.mapView.alpha = 1
+                self.SearchingText.hidden = true
+                self.progressIcon.hidden = true
+                self.SearchingText.text = "Searching..."
+            }
         }
 
    
@@ -129,10 +169,6 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
 
     func notificationmsg (msgstring: String)
     {
-        self.mapView.alpha = 1
-        self.SearchingText.hidden = true
-        self.progressIcon.hidden = true
-        
         dispatch_async(dispatch_get_main_queue()){
             let controller = UIAlertController(title: "Notification", message: msgstring,     preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
