@@ -80,6 +80,11 @@ class LoginViewController: UIViewController {
         }
         
     }
+    
+    @IBAction func signup(sender: UIButton) {
+        UIApplication.sharedApplication().openURL(NSURL(string: MapClient.Constants.UdacitySignup)!)
+    }
+    
 
 }
 
@@ -90,16 +95,11 @@ extension LoginViewController {
         /* Configure background gradient */
         self.view.backgroundColor = UIColor(red: 1.000, green: 0.5804, blue: 0.1765, alpha: 1.0)
         
-        /* Configure header text label */
-        headerTextLabel.font = UIFont(name: "AvenirNext-Medium", size: 24.0)
-        headerTextLabel.textColor = UIColor.whiteColor()
-        
         /* Configure email textfield */
         let emailTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0);
         let emailTextFieldPaddingView = UIView(frame: emailTextFieldPaddingViewFrame)
         userNameText.leftView = emailTextFieldPaddingView
         userNameText.leftViewMode = .Always
-        userNameText.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
         userNameText.textColor = UIColor.whiteColor()
         userNameText.attributedPlaceholder = NSAttributedString(string: userNameText.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         userNameText.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
@@ -109,14 +109,9 @@ extension LoginViewController {
         let passwordTextFieldPaddingView = UIView(frame: passwordTextFieldPaddingViewFrame)
         passwordText.leftView = passwordTextFieldPaddingView
         passwordText.leftViewMode = .Always
-        passwordText.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
         passwordText.textColor = UIColor.whiteColor()
         passwordText.attributedPlaceholder = NSAttributedString(string: passwordText.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         passwordText.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
-        
-        /* Configure debug text label */
-        headerTextLabel.font = UIFont(name: "AvenirNext-Medium", size: 20)
-        headerTextLabel.textColor = UIColor.whiteColor()
         
         /* Configure tap recognizer */
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")

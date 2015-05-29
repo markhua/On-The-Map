@@ -18,7 +18,7 @@ extension MapClient {
         // MARK: URLs
         static let BaseParseURL : String = "https://api.parse.com/"
         static let BaseUdacityURL : String = "https://www.udacity.com/api/"
-        
+        static let UdacitySignup : String = "https://www.udacity.com/account/auth#!/signup/"
     }
 
 }
