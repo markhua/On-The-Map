@@ -53,11 +53,11 @@ extension MapClient{
                 if let useraccount = parsedResult["account"] as? NSDictionary {
                     if let userid = useraccount["key"] as? String {
                         self.userID = userid
-                        println("user id: \(self.userID!)")
+                        //println("user id: \(self.userID!)")
                         
                         if let session = parsedResult["session"] as? NSDictionary {
                             self.sessionID = session["id"] as? String
-                            println("session id: \(self.sessionID!)")
+                            //println("session id: \(self.sessionID!)")
                             completionHandler(success: true, errorString: nil)
 
                         } else {
@@ -79,7 +79,7 @@ extension MapClient{
     //get student locations list and store into the [StudentLocation] array in MapClient
     func getStudentLocations(completionHandler: (success: Bool, error: String?)->Void){
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation?limit=100")!)
         request.addValue(MapClient.Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")
         
         request.addValue(MapClient.Constants.ApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
@@ -121,7 +121,6 @@ extension MapClient{
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
             if error != nil { // Handle error...
-                println("Failed to get user info")
                 completionHandler(success: false, errorString: "Connection error")
                 return
             }
@@ -136,12 +135,12 @@ extension MapClient{
                 if let useraccount = parsedResult["user"] as? NSDictionary {
                     if let firstname = useraccount["first_name"] as? String {
                         self.firstName = firstname
-                        println("First Name: \(self.firstName!)")
+                        //println("First Name: \(self.firstName!)")
                     }
                     
                     if let lastname = useraccount["last_name"] as? String {
                         self.lastName = lastname
-                        println("Last Name: \(self.lastName!)")
+                        //println("Last Name: \(self.lastName!)")
                     }
                         
                     if (self.firstName == "") && (self.lastName == "")
@@ -195,8 +194,6 @@ extension MapClient{
         let urlString = "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation/\(self.objectid!)"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
-        
-        println(MediaURL)
         
         request.HTTPMethod = "PUT"
         request.addValue(MapClient.Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")

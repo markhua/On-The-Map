@@ -128,7 +128,6 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
                                             self.SearchingText.text = "Searching..."
                                         }
                                         let updateAction: UIAlertAction = UIAlertAction(title: "Update", style: .Default) { action -> Void in
-                                            println(self.urlView.text)
                                             
                                             //Call updateUserLocation to update location
                                             MapClient.sharedInstance().updateUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: urlstring){ success, error in
