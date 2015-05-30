@@ -153,7 +153,7 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
                                 } else {
                                     
                                     //Add a new pin for the user
-                                    MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
+                                    MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: urlstring){ success, error in
                                         if success {
                                             dispatch_async(dispatch_get_main_queue()){
                                                 let controller = UIAlertController(title: "Notification", message: "Post location success", preferredStyle: .Alert)
