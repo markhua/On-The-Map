@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 Mark Zhang. All rights reserved.
 //
 
-struct location {
+struct StudentLocation {
     
     var firstname = ""
     var lastname = ""
@@ -18,20 +18,20 @@ struct location {
     var objectid = ""
     
     init(dictionary: [String : AnyObject]) {
-        firstname = dictionary["firstName"] as! String
-        lastname = dictionary["lastName"] as! String
-        maplocation = dictionary["mapString"] as! String
-        mediaURL = dictionary["mediaURL"] as! String
-        latitude = dictionary["latitude"] as! Double
-        longitude = dictionary["longitude"] as! Double
-        uniqueKey = dictionary["uniqueKey"] as! String
-        objectid = dictionary["objectId"] as! String
+        if let FirstName = dictionary["firstName"] as? String { firstname = FirstName }
+        if let Lastname = dictionary["lastName"] as? String {lastname = Lastname }
+        if let Maplocation = dictionary["mapString"] as? String {maplocation = Maplocation}
+        if let MediaURL = dictionary["mediaURL"] as? String {mediaURL = MediaURL}
+        if let Latitude = dictionary["latitude"] as? Double {latitude = Latitude}
+        if let Longitude = dictionary["longitude"] as? Double {longitude = Longitude}
+        if let UniqueKey = dictionary["uniqueKey"] as? String {uniqueKey = UniqueKey}
+        if let Objectid = dictionary["objectId"] as? String {objectid = Objectid}
     }
     
     //Add each location from results to array without duplication
-    static func locationsFromResults(results: [[String : AnyObject]]) -> [location] {
+    static func locationsFromResults(results: [[String : AnyObject]]) -> [StudentLocation] {
         
-        var locations = [location]()
+        var locations = [StudentLocation]()
         var duplicate = false
         
         for result in results {
@@ -41,12 +41,11 @@ struct location {
                         //Use uniqueKey to identify duplicates
                         if loc.uniqueKey == uniqueKey {
                             duplicate = true
-                            println("duplicate")
                             break outerLoop
                         }
                     }
                     if (!duplicate){
-                        locations.append(location(dictionary: result))
+                        locations.append(StudentLocation(dictionary: result))
                     }
             }else{
                 println("uniqueKey is empty")

@@ -76,7 +76,7 @@ extension MapClient{
 
     }
     
-    //get student locations list and store into the [location] array in MapClient
+    //get student locations list and store into the [StudentLocation] array in MapClient
     func getStudentLocations(completionHandler: (success: Bool, error: String?)->Void){
         
         let request = NSMutableURLRequest(URL: NSURL(string: "\(MapClient.Constants.BaseParseURL)1/classes/StudentLocation")!)
@@ -98,7 +98,7 @@ extension MapClient{
                     completionHandler(success: false, error: "Parsing Error")
                 } else {
                     if let resultArray = parsedResult["results"] as? [[String: AnyObject]]{
-                        var locations = location.locationsFromResults(resultArray)
+                        var locations = StudentLocation.locationsFromResults(resultArray)
                         self.locations = locations
                         completionHandler(success: true, error: nil)
                     } else {
@@ -225,5 +225,12 @@ extension MapClient{
         
         task.resume()
         
+    }
+    
+    //Validate URL
+    func isValidURL(testURL: String) -> Bool {
+        let urlregex = "(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+"
+        let url = NSPredicate(format: "SELF MATCHES %@", urlregex)
+        return (url.evaluateWithObject(testURL))
     }
 }

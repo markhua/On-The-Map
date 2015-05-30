@@ -101,9 +101,10 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
             if success {
                 
                 //check if the input URL is valid or not
-                if let checkURL = NSURL(string: self.urlView.text) {
-                    if UIApplication.sharedApplication().canOpenURL(checkURL)  {
-                        
+                
+                if MapClient.sharedInstance().isValidURL(self.urlView.text) {
+                    if let checkURL = NSURL(string: self.urlView.text) {
+
                         //get all students' locations and check whether the user's pin already exists
                         MapClient.sharedInstance().getStudentLocations {success, error in
                             if success {
@@ -133,7 +134,12 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
                                             MapClient.sharedInstance().updateUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: urlstring){ success, error in
                                                 if success {
                                                     dispatch_async(dispatch_get_main_queue()){
-                                                        self.notificationmsg("Update location success")
+                                                        let controller = UIAlertController(title: "Notification", message: "Update location success", preferredStyle: .Alert)
+                                                        controller.addAction(UIAlertAction(title: "OK", style: .Default) {
+                                                            action -> Void in
+                                                                self.dismissViewControllerAnimated(true, completion: nil)
+                                                            })
+                                                        self.presentViewController(controller, animated: true, completion: nil)
                                                     }
                                                 } else {
                                                     self.notificationmsg(error!)
@@ -151,7 +157,12 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
                                     MapClient.sharedInstance().postUserLocation(self.location!, LocationString: self.locationView.text, MediaURL: self.urlView.text){ success, error in
                                         if success {
                                             dispatch_async(dispatch_get_main_queue()){
-                                                self.notificationmsg("Post location success")
+                                                let controller = UIAlertController(title: "Notification", message: "Post location success", preferredStyle: .Alert)
+                                                controller.addAction(UIAlertAction(title: "OK", style: .Default) {
+                                                    action -> Void in
+                                                    self.dismissViewControllerAnimated(true, completion: nil)
+                                                    })
+                                                self.presentViewController(controller, animated: true, completion: nil)
                                             }
                                         } else {
                                             self.notificationmsg(error!)
@@ -174,8 +185,6 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
 
         }
 
-   
-
     }
     
     //Display notification with message string
@@ -186,7 +195,7 @@ class AddLocationViewController: UIViewController, UITextViewDelegate, CLLocatio
             self.SearchingText.hidden = true
             self.progressIcon.hidden = true
             self.SearchingText.text = "Searching..."
-            let controller = UIAlertController(title: "Notification", message: msgstring,     preferredStyle: .Alert)
+            let controller = UIAlertController(title: "Notification", message: msgstring, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
             self.presentViewController(controller, animated: true, completion: nil)
         }

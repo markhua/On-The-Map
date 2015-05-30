@@ -16,10 +16,14 @@ class MapClient: NSObject {
     var firstName: String?
     var lastName: String?
     var objectid: String?
-    var locations : [location] = [location]()
+    var locations : [StudentLocation] = [StudentLocation]()
     
     override init(){
-        userID = "3929338548"
+        userID = ""
+        sessionID = ""
+        firstName = ""
+        lastName = ""
+        objectid = ""
     }
     
     class func sharedInstance() -> MapClient {

@@ -212,7 +212,7 @@
             </objects>
             <point key="canvasLocation" x="602" y="-491"/>
         </scene>
-        <!--Map View Controller-->
+        <!--On The Map-->
         <scene sceneID="Wuo-ON-tQy">
             <objects>
                 <viewController id="Wew-nj-WA4" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -236,7 +236,7 @@
                             <constraint firstItem="n1f-zV-5S9" firstAttribute="top" secondItem="Ran-no-JEp" secondAttribute="bottom" constant="-8" id="dWb-jV-nHG"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="M9c-VS-5gV">
+                    <navigationItem key="navigationItem" title="On The Map" id="M9c-VS-5gV">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="E5o-5y-iNq">
                             <connections>
                                 <action selector="refreshMap:" destination="Wew-nj-WA4" id="06N-gb-KXd"/>
@@ -406,7 +406,7 @@
             </objects>
             <point key="canvasLocation" x="2166" y="-491"/>
         </scene>
-        <!--Student Location View Controller-->
+        <!--On The Map-->
         <scene sceneID="W0I-wJ-IhB">
             <objects>
                 <tableViewController storyboardIdentifier="StudentLocationViewController" id="GBI-5d-trI" customClass="StudentLocationViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -427,7 +427,7 @@
                             <outlet property="delegate" destination="GBI-5d-trI" id="P6g-9h-GfO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="OJZ-C9-qkN">
+                    <navigationItem key="navigationItem" title="On The Map" id="OJZ-C9-qkN">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="cjF-j5-F8w">
                             <connections>
                                 <action selector="refreshTable:" destination="GBI-5d-trI" id="dC1-Q3-90s"/>
@@ -454,6 +454,6 @@
         <image name="Pin" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="q51-dE-EYU"/>
+        <segue reference="g04-yL-ILX"/>
     </inferredMetricsTieBreakers>
 </document>

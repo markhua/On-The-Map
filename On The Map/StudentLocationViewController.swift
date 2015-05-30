@@ -24,11 +24,7 @@ class StudentLocationViewController: UITableViewController, UITableViewDataSourc
                     self.locationTable.reloadData()
                 }
             }else{
-                dispatch_async(dispatch_get_main_queue()){
-                    let controller = UIAlertController(title: "Alert", message: error, preferredStyle: .Alert)
-                    controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    self.presentViewController(controller, animated: true, completion: nil)
-                }
+                self.notificationmsg(error!)
             }
             
         }
@@ -37,7 +33,18 @@ class StudentLocationViewController: UITableViewController, UITableViewDataSourc
     
     //Refresh location data
     @IBAction func refreshTable(sender: UIBarButtonItem) {
-        self.viewDidLoad()
+        
+        MapClient.sharedInstance().getStudentLocations {success, error in
+            if success {
+                let locs = MapClient.sharedInstance().locations
+                dispatch_async(dispatch_get_main_queue()){
+                    self.locationTable.reloadData()
+                }
+            }else{
+                self.notificationmsg(error!)
+            }
+            
+        }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -65,12 +72,18 @@ class StudentLocationViewController: UITableViewController, UITableViewDataSourc
         let currentlocation = MapClient.sharedInstance().locations[indexPath.row]
         if let checkURL = NSURL(string: currentlocation.mediaURL) {
             if (!UIApplication.sharedApplication().openURL(checkURL)){
-                dispatch_async(dispatch_get_main_queue()){
-                    let controller = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
-                    controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    self.presentViewController(controller, animated: true, completion: nil)
-                }
+                notificationmsg("Invalid URL")
             }
+        }
+    }
+    
+    //Display notification with message string
+    func notificationmsg (msgstring: String)
+    {
+        dispatch_async(dispatch_get_main_queue()){
+            let controller = UIAlertController(title: "Notification", message: msgstring, preferredStyle: .Alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(controller, animated: true, completion: nil)
         }
     }
 
