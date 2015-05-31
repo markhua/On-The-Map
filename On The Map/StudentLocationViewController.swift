@@ -12,28 +12,30 @@ import UIKit
 class StudentLocationViewController: UITableViewController, UITableViewDataSource {
     
     @IBOutlet var locationTable: UITableView!
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
+        //Add Logout and refresh button on the navigation bar
+        let logoutbutton = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Plain, target: self, action: "logout:")
+        let refreshbutton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refreshTable:")
+        self.navigationItem.setLeftBarButtonItems([logoutbutton, refreshbutton], animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Get locations and load to the tableview
-        MapClient.sharedInstance().getStudentLocations {success, error in
-            if success {
-                let locs = MapClient.sharedInstance().locations
-                dispatch_async(dispatch_get_main_queue()){
-                    self.locationTable.reloadData()
-                }
-            }else{
-                self.notificationmsg(error!)
-            }
-            
-        }
+        refreshData()
 
     }
     
     //Refresh location data
     @IBAction func refreshTable(sender: UIBarButtonItem) {
-        
+        refreshData()
+    }
+    
+    func refreshData () {
         MapClient.sharedInstance().getStudentLocations {success, error in
             if success {
                 let locs = MapClient.sharedInstance().locations
@@ -43,8 +45,15 @@ class StudentLocationViewController: UITableViewController, UITableViewDataSourc
             }else{
                 self.notificationmsg(error!)
             }
-            
         }
+    }
+    
+    //user logout
+    func logout(sender: UIBarButtonItem) {
+        MapClient.sharedInstance().userID = ""
+        MapClient.sharedInstance().sessionID = ""
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("loginview") as! LoginViewController
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

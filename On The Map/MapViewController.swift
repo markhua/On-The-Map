@@ -15,35 +15,29 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     var annotations : [MKPointAnnotation] = [MKPointAnnotation]()
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Add Logout and refresh button on the navigation bar
+        let logoutbutton = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Plain, target: self, action: "logout:")
+        let refreshbutton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refreshMap:")
+        self.navigationItem.setLeftBarButtonItems([logoutbutton, refreshbutton], animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        
-        //Creat an array of annotations from students' locations and add to map
-        MapClient.sharedInstance().getStudentLocations {success, error in
-            if success {
-                for location in MapClient.sharedInstance().locations {
-                    var Annotation = MKPointAnnotation()
-                    Annotation.coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
-                    Annotation.title = "\(location.firstname) \(location.lastname)"
-                    Annotation.subtitle = location.mediaURL
-                    self.annotations.append(Annotation)
-                    dispatch_async(dispatch_get_main_queue()){
-                        self.mapView.addAnnotation(Annotation)
-                    }
-                }
-            }else{
-                self.notificationmsg(error!)
-            }
-            
-        }
-        
-        // Do any additional setup after loading the view.
+        loadMap()
     }
     
     //Refresh location data
-    @IBAction func refreshMap(sender: UIBarButtonItem) {
+    func refreshMap(sender: UIBarButtonItem) {
         self.mapView.removeAnnotations(self.annotations)
+        loadMap()
+    }
+    
+    //Creat an array of annotations from students' locations and add to map
+    func loadMap() {
         
         MapClient.sharedInstance().getStudentLocations {success, error in
             if success {
@@ -62,6 +56,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             
         }
+    }
+    
+    //user logout
+    func logout(sender: UIBarButtonItem) {
+        MapClient.sharedInstance().userID = ""
+        MapClient.sharedInstance().sessionID = ""
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("loginview") as! LoginViewController
+        self.presentViewController(controller, animated: true, completion: nil)
     }
 
     //Add information button to each pin
